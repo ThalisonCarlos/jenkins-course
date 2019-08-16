@@ -1,2 +1,21 @@
 server:
   port: 8081
+
+spring:
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/jenkins-course-bd
+    username: jenkins-course-user
+    password: jenkins-course
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+    hibernate:
+      ddl-auto: create
