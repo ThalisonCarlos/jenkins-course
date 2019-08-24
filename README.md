@@ -1,9 +1,38 @@
 # jenkins-course
 
-Execute Profile:
-SPRING_PROFILES_ACTIVE=dev gradle clean bootRun
+Jenkins Jobs Execution
 
 This application was built for testing in jenkins course. 
+
+    • Pipeline Build Validation:
+
+        Source Code Management:
+       
+            SSHGIT
+
+        Build Triggers:
+
+            Poll SCM – Schedule: * * * * *
+      
+        Build:
+
+            ./gradlew clean build
+             ./gradlew test
+
+         Docker Build and Publish:
+
+             DeployImageGitHub
+
+         Post-build Actions
+
+             BuildQA
+
+        SlackNotification
+
+• Pipeline Build QA/DEV:
+
+Execute Profile:
+SPRING_PROFILES_ACTIVE=dev gradle clean bootRun
 
 Pipeline Declarative Script dev:
 
@@ -57,6 +86,38 @@ pipeline{
                         error('Erro')
                     }
                 }
+            }
+        }
+    }
+}
+
+
+• Pipeline Build PROD:
+
+pipeline{
+    
+    agent any
+    
+    stages{
+        stage('Remove Old Container'){
+            steps{
+                script{
+                    try{
+                        sh 'docker rm -f jenkins-course-prod'
+                    }catch(Exception e){
+                        sh 'echo '+ e
+                    }
+                }
+                
+            }
+        }
+        stage('Start new Container'){
+            steps{
+                
+             
+             sh 'docker run -d -p 80:8081 -e "SPRING_PROFILES_ACTIVE=prod" --name jenkins-course-prod thalisoncarlos/jenkins-course --stacktrace' 
+                    
+                    
             }
         }
     }
